@@ -10,6 +10,7 @@ import java.util.Random;
 public class Fish
 {
 
+  private MoveStrategy moveStrategy;
   private static Random random = new Random();
   private static int numberOfFish = 0;
 
@@ -82,11 +83,11 @@ public class Fish
     if(hunger < StarvingThreshold) {
       if(size < SmallFishThreshold) {
         // Smaller fish only eat plants
-        MoveStrategy = new EatPlantStrategy();
+        moveStrategy = new EatPlantStrategy();
       }
       else {
         // Really big fish like to eat other fish
-        MoveStrategy = new EatFishStrategy();
+        moveStrategy = new EatFishStrategy();
       }
     }
     else { 
@@ -94,16 +95,16 @@ public class Fish
       if (hunger < HungryThreshold) {
         // A big enough fish won't worry about being eaten
         if (size > BigFishThreshold) {
-          MoveStrategy = new RandomSwimStrategy();
+          moveStrategy = new RandomSwimStrategy();
         }
         else {
           // Want to avoid the nearest big fish
-          MoveStrategy = new AvoidStrategy();
+          moveStrategy = new AvoidStrategy();
         }
       }
       else {
         // A really full fish will just hide and sleep
-        MoveStrategy = new HideStrategy();
+        moveStrategy = new HideStrategy();
       }
     }
   }
@@ -112,7 +113,7 @@ public class Fish
   {
     // Fish movement involves either seeking out food, avoiding other
     // fish, or being lazy and just swimming around if big enough
-    MoveStrategy.move(pond, this, x, y);
+    moveStrategy.move(pond, this, x, y);
 }
 
   // Swim towards a location
