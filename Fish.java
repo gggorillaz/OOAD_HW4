@@ -15,7 +15,7 @@ public class Fish
 
   private double hunger;			// A value between 0 (hungry) and 1 (full)
   private double size;
-  private double x;                 // Where the fish is
+  private double x;                 // Where the fish is?
   private double y;
   private int id; 
 
@@ -43,6 +43,8 @@ public class Fish
     // And give it an id
     id = numberOfFish;
     numberOfFish++;
+
+    updateMoveStrategy();
 
     // Who to report to?
     myFishReport = report;
@@ -72,53 +74,46 @@ public class Fish
 
     myFishReport.updateHunger(hunger);
     myFishReport.updateSize(size);   
+    updateMoveStrategy();
+  }
+
+  private void updateMoveStrategy() {
+    // If fish is starving, ignore possible preditors
+    if(hunger < StarvingThreshold) {
+      if(size < SmallFishThreshold) {
+        // Smaller fish only eat plants
+        MoveStrategy = new EatPlantStrategy();
+      }
+      else {
+        // Really big fish like to eat other fish
+        MoveStrategy = new EatFishStrategy();
+      }
+    }
+    else { 
+      // Fish isn't starving, but is hungry
+      if (hunger < HungryThreshold) {
+        // A big enough fish won't worry about being eaten
+        if (size > BigFishThreshold) {
+          MoveStrategy = new RandomSwimStrategy();
+        }
+        else {
+          // Want to avoid the nearest big fish
+          MoveStrategy = new AvoidStrategy();
+        }
+      }
+      else {
+        // A really full fish will just hide and sleep
+        MoveStrategy = new HideStrategy();
+      }
+    }
   }
 
   public void move(Pond pond)
   {
     // Fish movement involves either seeking out food, avoiding other
     // fish, or being lazy and just swimming around if big enough
-
-    // If fish is starving, ignore possible preditors
-    if(hunger < StarvingThreshold)              
-    {
-      if(size < SmallFishThreshold)
-      {
-        // Smaller fish only eat plants
-        double[] location = pond.findNearestPlant(x, y);
-        swimTowards(location[0], location[1]);
-      }
-      else
-      {
-        // Really big fish like to eat other fish
-        double[] location = pond.findNearestSmallFish(x, y);
-        swimTowards(location[0], location[1]);
-      }
-    }
-    else 
-    { 
-      // Fish isn't starving, but is hungry
-      if (hunger < HungryThreshold)
-      {
-        // A big enough fish won't worry about being eaten
-        if (size > BigFishThreshold)
-        {
-          swimRandomly();
-        }
-        else
-        {
-          // Want to avoid the nearest big fish
-          double[] location = pond.findNearestBigFish(x, y);
-          swimAway(location[0], location[1]);
-        }
-      }
-      else
-      {
-        // A really full fish will just hide and sleep
-        hide();
-      }
-    }
-  }
+    MoveStrategy.move(pond, this, x, y);
+}
 
   // Swim towards a location
   public void swimTowards(double tx, double ty)
