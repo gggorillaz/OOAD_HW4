@@ -7,7 +7,7 @@
 import java.lang.Math;
 import java.util.Random;
 
-public class Fish
+public class Fish extends Subject
 {
 
   private MoveStrategy moveStrategy;
@@ -29,7 +29,7 @@ public class Fish
 
   // Don't want to be able to directly query the fish for information, but do 
   // need to get information for logging or displaying on a GUI, etc.
-  private FishReport myFishReport = null;
+  //private FishReport myFishReport = null;
 
   public Fish(double x, double y, FishReport report)
   {
@@ -45,9 +45,12 @@ public class Fish
     id = numberOfFish;
     numberOfFish++;
 
+    addObserver(report);
     updateMoveStrategy();
+    updateVariables();
 
     // Who to report to?
+    /*
     myFishReport = report;
     if(myFishReport != null)
     {
@@ -55,12 +58,19 @@ public class Fish
       myFishReport.updateSize(size);
       myFishReport.updateLocation(x, y);
     }
+    */
+
   }
 
   public double getSize()           
   {
     return size;
   } 
+
+  public void updateVariables() {
+    double[] params = {hunger, size, x, y};
+    notifyObserver(params);
+  }
 
   public void age(double timePassed)
   {
@@ -73,9 +83,11 @@ public class Fish
     // has been consumed
     hunger = hunger * Math.exp(-deltaSize/size);
 
-    myFishReport.updateHunger(hunger);
-    myFishReport.updateSize(size);   
+    //myFishReport.updateHunger(hunger);
+    //myFishReport.updateSize(size);   
+    
     updateMoveStrategy();
+    updateVariables();
   }
 
   private void updateMoveStrategy() {

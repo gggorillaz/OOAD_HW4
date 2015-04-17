@@ -4,7 +4,7 @@
 * An object individual fish update whenever their status changes
 */
 
-public class FishReport
+public class FishReport implements Observer
 {
   private double hunger;
   private double size;
@@ -50,5 +50,15 @@ public class FishReport
   {
     double location[] = {x, y};
     return location;
+  }
+
+  public void update(doube[] params) {
+    hunger = params[0];
+    size = params[1];
+    x = params[2];
+    y = params[3];
+    updateHunger(hunger);
+    updateSize(size);
+    updateLocation(x, y);
   }
 }
