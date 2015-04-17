@@ -52,7 +52,7 @@ public class FishReport implements Observer
     return location;
   }
 
-  public void update(doube[] params) {
+  public void update(double[] params) {
     hunger = params[0];
     size = params[1];
     x = params[2];

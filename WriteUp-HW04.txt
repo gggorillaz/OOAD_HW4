@@ -1,0 +1,104 @@
+###1###
+
+1.	Identification of 6 "magic values".
+
+- 1.0
+- 0.9
+- 0.2
+- 7.0
+- 0.7
+- 5.0
+
+2.	Below the class declaration, changed the comment "Where the fish is" to "Where the fish is?"
+	Seemed more comical...
+
+3. 	Below the class declaration, declared 'static final double NewbornHunger = 0.9;'
+	In the fish constructor changed 'hunger = 0.9' to 'hunger = NewbornHunger;'
+
+4. 	Below the class declaration, declared 'static final double NewbornSize = 1.0;'
+	In the fish constructor changed 'size = 1.0' to 'size = NewbornSize;'
+
+5. 	Below the class declaration, declared 'static final double StarvingThreshold = 0.2;'
+	In the move method, changed 'if(hunger < 0.2)' to  'if(hunger < StarvingThreshold)'
+
+6. 	Below the class declaration, declared ' static final double SmallFishThreshold = 7.0;'
+	In the move method, changed 'if(size < 7.0)' to  'if(size < SmallFishThreshold)'
+
+7. 	Below the class declaration, declared ' static final double HungryThreshold= 0.7;'
+	In the move method, changed 'if (hunger < 0.7)' to  'if (hunger < HungryThreshold)'
+
+8. 	Below the class declaration, declared 'static final double BigFishThreshold = 5.0;'
+	In the move method, changed 'if (size > 5.0)' to  'if (size > BigFishThreshold)'
+
+9. 	Ran the test suite, all tests passed. 
+
+
+
+###2###
+
+1. Identified the complex conditional statement in the move method in the fish class.
+
+2. Created an abstract class 'MoveStrategy' with multiple sublcasses
+	- EatPlantStrategy();
+	- EatFishStrategy();
+	- RandomSwimStrategy();
+	- AvoidStrategy();
+	- HideStrategy();
+
+3. For each of the created 5 classes that extend the MoveStrategy abstract interface, I updated calculations based on the conditionals they used to reside within
+	a. class EatPlantSrategy
+		added 'double[] location = pond.findNearestPlant(fish.getX(), fish.getY());
+        added fish.swimTowards(location[0], location[1]);'         
+	b. class EatFishSrategy
+		added 'double[] location = 'pond.findNearestSmallFish(fish.getX(), fish.getY());
+        added fish.swimTowards(location[0], location[1]);'  
+	c. class RandomSwimStrategy
+		added fish.swimRandomly();
+	d. class AvoidStrategy
+		added 'double[] location = pond.findNearestBigFish(fish.getX(), fish.getY());
+		added fish.swimAway(location[0], location[1]);'
+	e. class HideStrategy
+		added fish.hide();
+
+4. Removed all conditionals within the move() method and added them into updateMoveStrategy();
+
+5. Created private MoveStrategy object and instantiated it with the respectve strategies defined in the updateMoveStrategy() conditionals.
+
+6. Simplified move() so that the MoveStrategy objects only have to call the move method.
+
+7. Added updateMoveStrategy in the constructor and at the end of the age() method so that we can perform how the fish should be moving every time it's instantiated or it ages (when age() is called).
+
+8. Ran the test suite, all tests passed.
+
+
+
+###3###
+
+1. Identified that Fish is the Subject of what we're dealing with and FishReport is the observer.
+
+2. Created an Observer interface that contains a single method to update parameters
+	update(double[] params)
+
+3. Created a Subject class
+	- Initialized a list of observers that each observer will be stored within
+	- Defined an addObserver method to add any new observer types. Ex. FishReport
+
+4. Fish class now needs to extend subject, so in Fish.java changed 
+	'public class Fish' to 'public class Fish extends Subject'
+
+5. Need to create a new observer when a fish is initialized, so added 
+	'addObserver(report)' in the Fish constructor.
+	This also means deleting the previous "who to report for?" code (since we're using the observer pattern from now on)
+
+6. Created an updateVariables method that will notify the observer (notifyObserver) with various Fish paramters consisting of...
+	- hunger
+	- size
+	- x
+	- y
+
+7. Whenever a Fish parameter is modifed, updateVariables will be called to notify the observers of the newest parameter values.
+
+8. FishReport class now needs to implement observer, so in FishReport.java changed 
+	'public class FishReport' to 'public class FishReport implements Observer'
+
+9. Defined an update method in FishReport.java that calls the other update methods in FishReport with the newly defined parameters.

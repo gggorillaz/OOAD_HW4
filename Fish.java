@@ -24,7 +24,7 @@ public class Fish extends Subject
   static final double NewbornSize = 1.0;
   static final double StarvingThreshold = 0.2;
   static final double SmallFishThreshold = 7.0;
-  static final double HungryThreshold 0.7;
+  static final double HungryThreshold = 0.7;
   static final double BigFishThreshold = 5.0;
 
   // Don't want to be able to directly query the fish for information, but do 
@@ -135,7 +135,7 @@ public class Fish extends Subject
     x = x + (tx/distance);
     y = y + (ty/distance);
 
-    myFishReport.updateLocation(x, y);
+    updateVariables();
   }
 
 
@@ -146,7 +146,7 @@ public class Fish extends Subject
     x = x - (tx/distance);
     y = y - (ty/distance);
 
-    myFishReport.updateLocation(x, y);
+    updateVariables();
   }
 
 
@@ -158,7 +158,7 @@ public class Fish extends Subject
     x = x + random.nextDouble();
     y = y + random.nextDouble();
 
-    myFishReport.updateLocation(x, y);
+    updateVariables();
   }
 
   // Just let the world know I hid!
