@@ -19,6 +19,13 @@ public class Fish
   private double y;
   private int id; 
 
+  static final double NewbornHunger = 0.9;
+  static final double NewbornSize = 1.0;
+  static final double StarvingThreshold = 0.2;
+  static final double SmallFishThreshold = 7.0;
+  static final double HungryThreshold 0.7;
+  static final double BigFishThreshold = 5.0;
+
   // Don't want to be able to directly query the fish for information, but do 
   // need to get information for logging or displaying on a GUI, etc.
   private FishReport myFishReport = null;
@@ -26,8 +33,8 @@ public class Fish
   public Fish(double x, double y, FishReport report)
   {
     // A fish is born!
-    hunger = 0.9;
-    size = 1.0;
+    hunger = NewbornHunger;
+    size = NewbornSize;
 
     // Put it in the pond
     this.x = x;
@@ -73,9 +80,9 @@ public class Fish
     // fish, or being lazy and just swimming around if big enough
 
     // If fish is starving, ignore possible preditors
-    if(hunger < 0.2)              
+    if(hunger < StarvingThreshold)              
     {
-      if(size < 7.0)
+      if(size < SmallFishThreshold)
       {
         // Smaller fish only eat plants
         double[] location = pond.findNearestPlant(x, y);
@@ -91,10 +98,10 @@ public class Fish
     else 
     { 
       // Fish isn't starving, but is hungry
-      if (hunger < 0.7)
+      if (hunger < HungryThreshold)
       {
         // A big enough fish won't worry about being eaten
-        if (size > 5.0)
+        if (size > BigFishThreshold)
         {
           swimRandomly();
         }
